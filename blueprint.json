@@ -1,0 +1,25 @@
+{
+  "landingPage": "/wp-admin/plugins.php",
+  "preferredVersions": {
+    "php": "8.0",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "url",
+        "url": "https://playground.wordpress.net/plugin-proxy.php?url=https://github.com/ManikinSaute/PDF2Post/archive/refs/tags/V1.0.zip"
+      },
+      "activate": true
+    },
+    {
+      "step": "login",
+      "username": "admin",
+      "password": "password"
+    }
+  ]
+}
