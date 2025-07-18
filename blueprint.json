@@ -1,14 +1,13 @@
 {
-  "landingPage": "/wp-admin/",
+  "landingPage": "/wp-admin/plugins.php",
   "login": true,
   "steps": [
     {
       "step": "installPlugin",
       "pluginData": {
         "resource": "url",
-        "url": "https://playground.wordpress.net/plugin-proxy.php?url=https://github.com/ManikinSaute/PDF2Post/archive/refs/tags/V1.0.zip"
-      },
-      "activate": true
+        "url": "https://manikinsaute.github.io/PDF2PostZips/PDF2Post.zip"
+      }
     }
   ]
 }
