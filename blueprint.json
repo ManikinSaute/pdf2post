@@ -9,13 +9,13 @@
   },
   "steps": [
     {
-    {
       "step": "writeFile",
       "path": "/wordpress/wp-content/mu-plugins/pdf2post.php",
       "data": {
         "resource": "url",
         "url": "https://raw.githubusercontent.com/ManikinSaute/PDF2Post/refs/heads/main/pdf2post.php"
-      },
+      }
+    },
     {
       "step": "login",
       "username": "admin",
