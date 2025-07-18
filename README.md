@@ -1,4 +1,11 @@
 # PDF2Post
+
+Open in playground https://playground.wordpress.net/
+Add the V1.0 plugin 
+Delete Hello Dolly /wp-admin/plugins.php
+Copy plugin code https://github.com/ManikinSaute/PDF2Post/blob/main/pdf2post.php 
+Paste into /wp-admin/plugin-editor.php
+
 A tool for grabbing a PDF file from a URL, performing OCR, and creating a WordPress post with Gutenberg blocks.
 
 The plugin does the following:
