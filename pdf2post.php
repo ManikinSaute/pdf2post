@@ -97,7 +97,7 @@ function pdf2post_render_page() {
                     <p><strong>New Media URL:</strong> <a href="<?php echo esc_url( $attach_url ); ?>" target="_blank"><?php echo esc_html( $attach_url ); ?></a></p>
                 </div>
                 <h2> Import Data</h2>
-				<p>Clicking this button will create a post in the Import Custom Post type and will save data to that posts post meta.</p>
+				<p>Clicking this button will create a post in the Import Custom Post type, and it will save some data to post meta.</p>
                 <!-- Step 2: Import Post button + hidden data -->
                 <form method="post" style="margin-top:20px;">
                     <?php wp_nonce_field( 'pdf2post_import', 'pdf2post_import_nonce' ); ?>
@@ -122,7 +122,7 @@ function pdf2post_render_page() {
         // Create a new import‐type post
         $post_data = [
             'post_title'   => $file_name,
-            'post_content' => 'In the future we will move in the actual content from the PDF but will will need to run the OCR tyoe tools first',
+            'post_content' => 'In the future we will move in the actual content from the PDF but will will need to run the OCR type tools first',
             'post_status'  => 'publish',
             'post_type'    => 'import',
         ];
