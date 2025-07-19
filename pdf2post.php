@@ -2,7 +2,7 @@
 /*
 Plugin Name: pdf2post
 Description: Registers custom post types for Import, Markdown, and Gutenberg content, and adds an Import PDF admin page.
-Version: 1.3
+Version: 1.1
 Author: Thomas Parsons
 Requires at least: 6.7
 Tested up to: 6.7
