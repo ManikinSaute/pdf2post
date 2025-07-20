@@ -4,7 +4,7 @@ add_action( 'admin_menu', 'pdf2post_add_settings_page' );
 function pdf2post_add_settings_page() {
     add_options_page(
         'PDF2Post Settings',
-        'PDF2Post',
+        'PDF2Post Settings',
         'manage_options',
         'pdf2post-settings',
         'pdf2post_render_settings_page'
