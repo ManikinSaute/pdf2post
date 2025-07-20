@@ -8,6 +8,10 @@
         "resource": "url",
         "url": "https://manikinsaute.github.io/PDF2PostZips/PDF2Post.zip"
       }
+    },
+    {
+      "step": "rm",
+      "path": "/wordpress/wp-content/plugins/hello.php"
     }
   ]
 }
