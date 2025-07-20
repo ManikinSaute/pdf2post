@@ -12,6 +12,10 @@
     {
       "step": "rm",
       "path": "/wordpress/wp-content/plugins/hello.php"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp config set WP_POST_REVISIONS 0 --raw"
     }
   ]
 }
