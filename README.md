@@ -5,6 +5,7 @@ Delete Hello Dolly /wp-admin/plugins.php
 Copy latest plugin code https://github.com/ManikinSaute/PDF2Post/blob/main/pdf2post.php    
 Paste into /wp-admin/plugin-editor.php   
 edit the blue print here https://github.com/ManikinSaute/PDF2Post/blob/main/blueprint.json    
+Test it here https://playground.wordpress.net/builder/builder.html   
 
 A tool for grabbing a PDF file from a URL, performing OCR, and creating a WordPress post with Gutenberg blocks.
 
