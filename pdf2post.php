@@ -142,3 +142,30 @@ function pdf2post_render_page() {
 
     echo '</div>';
 }
+
+
+// Show an admin notice with the current WP_POST_REVISIONS setting
+function pdf2post_check_revisions_notice() {
+    if ( ! current_user_can( 'manage_options' ) ) {
+        return;
+    }
+
+    // Grab the constant
+    $revisions = WP_POST_REVISIONS;
+
+    // Normalize for display
+    if ( $revisions === false ) {
+        $display = 'disabled';
+    } elseif ( is_int( $revisions ) ) {
+        $display = $revisions;
+    } else {
+        $display = 'default';
+    }
+
+    // Output the notice
+    echo '<div class="notice notice-info is-dismissible">';
+    echo '<p><strong>pdf2post:</strong> Post revisions are currently <em>' . esc_html( $display ) . '</em>.</p>';
+    echo '</div>';
+}
+add_action( 'admin_notices', 'pdf2post_check_revisions_notice' );
+
