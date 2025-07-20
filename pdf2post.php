@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: pdf2post
-Description: Registers custom post types for Import, Markdown, and Gutenberg content, and adds an Import PDF admin page.
-Version: 1.1
+Description: added a settings page
+Version: 1.2
 Author: Thomas Parsons
 Requires at least: 6.7
 Tested up to: 6.7
@@ -11,6 +11,10 @@ Author URI: https://github.com/ManikinSaute/PDF2Post
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
+
+if ( file_exists( __DIR__ . '/settings.php' ) ) {
+    require_once __DIR__ . '/settings.php';
+}
 
 // Register Custom Post Types
 function pdf2post_register_cpts() {
