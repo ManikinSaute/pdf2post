@@ -15,7 +15,7 @@ jobs:
 
       - name: Create ZIP file
         run: |
-          zip pdf2p2.zip pdf2p2.php settings.php
+          zip pdf2p2.zip pdf2p2.php settings.php logs.php
 
       - name: Commit ZIP file
         run: |
