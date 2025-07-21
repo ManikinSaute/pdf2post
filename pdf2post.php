@@ -1,13 +1,13 @@
 <?php
 /*
-Plugin Name: pdf2post
+Plugin Name: pdf2p2
 Description: added a settings page
-Version: 1.2
+Version: 1.3
 Author: Thomas Parsons
 Requires at least: 6.7
 Tested up to: 6.7
 Requires PHP: 8.2
-Author URI: https://github.com/ManikinSaute/PDF2Post
+Author URI: https://github.com/ManikinSaute/pdf2p2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
@@ -17,7 +17,7 @@ if ( file_exists( __DIR__ . '/settings.php' ) ) {
 }
 
 // Register Custom Post Types
-function pdf2post_register_cpts() {
+function pdf2p2_register_cpts() {
     $cpts = [
         'import' => ['singular' => 'Import', 'plural' => 'Imports'],
         'markdown' => ['singular' => 'MD Post', 'plural' => 'MD Posts'],
@@ -38,37 +38,37 @@ function pdf2post_register_cpts() {
         ]);
     }
 }
-add_action('init', 'pdf2post_register_cpts');
+add_action('init', 'pdf2p2_register_cpts');
 
 // Add admin page under Appearance → Tools
-function pdf2post_add_admin_page() {
+function pdf2p2_add_admin_page() {
     add_submenu_page(
 		'tools.php',   // add to the tools area
-        'pdf2post',             // Page title
-        'pdf2post',             // Menu title
+        'pdf2p2',             // Page title
+        'pdf2p2',             // Menu title
         'manage_options',         // Capability
-        'pdf2post',             // Menu slug
-        'pdf2post_render_page'// Callback function
+        'pdf2p2',             // Menu slug
+        'pdf2p2_render_page'// Callback function
     );
 }
-add_action('admin_menu', 'pdf2post_add_admin_page');
+add_action('admin_menu', 'pdf2p2_add_admin_page');
 
 // Render admin page content
-function pdf2post_render_page() {
+function pdf2p2_render_page() {
     ?>
     <div class="wrap">
         <h1>Import PDF</h1>
 <p>Add a URL to the full path of a PDF file, when you click submit your PDF will be coppied to the WordPress media libary and you will be shown some basic information about your file and be given the option to create an Import post in the Import Custom Post Type. 
         <!-- Step 1: URL form -->
         <form method="post">
-            <?php wp_nonce_field( 'pdf2post_upload', 'pdf2post_nonce' ); ?>
+            <?php wp_nonce_field( 'pdf2p2_upload', 'pdf2p2_nonce' ); ?>
             <input type="url" name="pdf_url" placeholder="Enter PDF URL" style="width:400px;" required />
             <input type="submit" name="pdf_url_submit" class="button button-primary" value="Upload PDF" />
         </form>
 
     <?php
     // Handle URL submission
-    if ( isset( $_POST['pdf_url_submit'] ) && wp_verify_nonce( $_POST['pdf2post_nonce'], 'pdf2post_upload' ) ) {
+    if ( isset( $_POST['pdf_url_submit'] ) && wp_verify_nonce( $_POST['pdf2p2_nonce'], 'pdf2p2_upload' ) ) {
 
         $pdf_url = esc_url_raw( $_POST['pdf_url'] );
 
@@ -104,7 +104,7 @@ function pdf2post_render_page() {
 				<p>Clicking this button will create a post in the Import Custom Post type, and it will save some data to post meta.</p>
                 <!-- Step 2: Import Post button + hidden data -->
                 <form method="post" style="margin-top:20px;">
-                    <?php wp_nonce_field( 'pdf2post_import', 'pdf2post_import_nonce' ); ?>
+                    <?php wp_nonce_field( 'pdf2p2_import', 'pdf2p2_import_nonce' ); ?>
                     <input type="hidden" name="pdf_attachment_id" value="<?php echo esc_attr( $attach_id ); ?>" />
                     <input type="hidden" name="pdf_original_url" value="<?php echo esc_url( $pdf_url ); ?>" />
                     <input type="hidden" name="pdf_new_url" value="<?php echo esc_url( $attach_url ); ?>" />
@@ -116,7 +116,7 @@ function pdf2post_render_page() {
     }
 
     // Handle the Import Post button
-    if ( isset( $_POST['import_post_submit'] ) && wp_verify_nonce( $_POST['pdf2post_import_nonce'], 'pdf2post_import' ) ) {
+    if ( isset( $_POST['import_post_submit'] ) && wp_verify_nonce( $_POST['pdf2p2_import_nonce'], 'pdf2p2_import' ) ) {
         $attach_id    = intval( $_POST['pdf_attachment_id'] );
         $original_url = esc_url_raw( $_POST['pdf_original_url'] );
         $new_url      = esc_url_raw( $_POST['pdf_new_url'] );
@@ -134,10 +134,10 @@ function pdf2post_render_page() {
 
         if ( ! is_wp_error( $post_id ) ) {
             // Save all the meta
-            update_post_meta( $post_id, 'p2p_original_file_path', $original_url );
-            update_post_meta( $post_id, 'p2p_new_file_url',       $new_url );
-            update_post_meta( $post_id, 'p2p_file_path',          $file_path );
-            update_post_meta( $post_id, 'p2p_attachment_id',      $attach_id );
+            update_post_meta( $post_id, 'pdf2p2_original_file_path', $original_url );
+            update_post_meta( $post_id, 'pdf2p2_new_file_url',       $new_url );
+            update_post_meta( $post_id, 'pdf2p2_file_path',          $file_path );
+            update_post_meta( $post_id, 'pdf2p2_attachment_id',      $attach_id );
             echo '<p style="color:green; margin-top:15px;">Import post created! (Post ID: ' . esc_html( $post_id ) . ')</p>';
         } else {
             echo '<p style="color:red;">Error creating import post: ' . esc_html( $post_id->get_error_message() ) . '</p>';
@@ -149,7 +149,7 @@ function pdf2post_render_page() {
 
 
 // Show an admin notice with the current WP_POST_REVISIONS setting
-function pdf2post_check_revisions_notice() {
+function pdf2p2_check_revisions_notice() {
     if ( ! current_user_can( 'manage_options' ) ) {
         return;
     }
@@ -168,8 +168,8 @@ function pdf2post_check_revisions_notice() {
 
     // Output the notice
     echo '<div class="notice notice-info is-dismissible">';
-    echo '<p><strong>pdf2post:</strong> Post revisions are currently <em>' . esc_html( $display ) . '</em>.</p>';
+    echo '<p><strong>pdf2p2:</strong> Post revisions are currently <em>' . esc_html( $display ) . '</em>.</p>';
     echo '</div>';
 }
-add_action( 'admin_notices', 'pdf2post_check_revisions_notice' );
+add_action( 'admin_notices', 'pdf2p2_check_revisions_notice' );
 
