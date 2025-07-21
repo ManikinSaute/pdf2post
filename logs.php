@@ -1,10 +1,11 @@
 <?php
 /**
  * Append a message to our plugin log.
- *
- * @param string $message
- * @param string $level   One of 'INFO', 'WARNING', 'ERROR'
+ * …
  */
+function pdf2p2_log( $message, $level = 'INFO' ) {
+    // ...
+}
 function pdf2p2_log( $message, $level = 'INFO' ) {
     // Where to store logs: wp-content/uploads/pdf2p2/logs/plugin.log
     $upload_dir = wp_upload_dir();
