@@ -6,7 +6,7 @@
       "step": "installPlugin",
       "pluginData": {
         "resource": "url",
-        "url": "https://manikinsaute.github.io/PDF2PostZips/PDF2Post.zip"
+        "url": "https://manikinsaute.github.io/PDF2PostZips/pdf2post.zip"
       }
     },
     {
