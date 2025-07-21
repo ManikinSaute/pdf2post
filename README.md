@@ -1,10 +1,13 @@
 # pdf2p2  
 
-Open in playground https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ManikinSaute/pdf2p2/main/blueprint.json    
-Copy latest plugin code https://github.com/ManikinSaute/pdf2p2/blob/main/pdf2p2.php    
-Paste into /wp-admin/plugin-editor.php   
-edit the blue print here https://github.com/ManikinSaute/pdf2p2/blob/main/blueprint.json    
-Test it here https://playground.wordpress.net/builder/builder.html   
+Open in the [latest version](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ManikinSaute/pdf2p2/main/blueprint.json ) in playground
+
+You can make changes to [file](https://github.com/ManikinSaute/pdf2p2/blob/main/pdf2p2.php) locally and paste them into the file editor, deactive and reactivate.
+
+You can edit the blue print here https://github.com/ManikinSaute/pdf2p2/blob/main/blueprint.json    
+
+You can [test edits to a blue print here](https://playground.wordpress.net/builder/builder.html   ) 
+
 
 A tool for grabbing a PDF file from a URL, performing OCR, and creating a WordPress post with Gutenberg blocks.
 
@@ -22,8 +25,8 @@ Admin page features:
 - Button to process the file  
 - Creates an "Import" post  
 - Saves the file to the media library  
-- Adds the file name to post meta  
-- Adds the original file URL to post meta
+- Adds the file name, original URL and a hash, to post meta  
+- Sets the post to unprocessed 
 
 When editing a single Import post:
 
@@ -34,12 +37,6 @@ When editing a single Import post:
 - Show a button for the user to **Extract PDF Content**  
     - When clicked, perform text extraction using pdf2htmlEX, pdftohtml (Spatie/pdf-to-text), or Smalot/pdfparser  
     - Save extraction data to extraction post meta  
-- Show a button for the user to **Build New Doc Using AI**  
-    - When clicked, perform text analysis  
-    - Guess which version (OCR or extracted) is better  
-    - Save guess to post meta  
-    - Build a more complete document from both sources  
-    - Save AI-generated data to AI generation post meta  
 - Show a select box for OCR, Extraction, or AI, and a button  
     - When the button is clicked, move the content from post meta to the main content  
 - Provide a button to **Convert Content to Markdown (MD)**  
