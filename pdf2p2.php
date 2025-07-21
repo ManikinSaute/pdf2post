@@ -19,9 +19,13 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 if ( file_exists( __DIR__ . '/settings.php' ) ) {
     require_once __DIR__ . '/settings.php';
 }
+
+// Load our logs code only in wp‑admin (so it never outputs on the front‑end)
+add_action( 'admin_init', function() {
 if ( file_exists( __DIR__ . '/logs.php' ) ) {
     require_once __DIR__ . '/logs.php';
-}
+    }
+} );
 
 
 // Register Custom Post Types
