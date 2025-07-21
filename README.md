@@ -1,7 +1,6 @@
 # PDF2Post
 
 Open in playground https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ManikinSaute/PDF2Post/main/blueprint.json    
-Delete Hello Dolly /wp-admin/plugins.php   
 Copy latest plugin code https://github.com/ManikinSaute/PDF2Post/blob/main/pdf2post.php    
 Paste into /wp-admin/plugin-editor.php   
 edit the blue print here https://github.com/ManikinSaute/PDF2Post/blob/main/blueprint.json    
