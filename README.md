@@ -1,4 +1,4 @@
-# pdf2post
+# pdf2p2
 
 Open in playground https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ManikinSaute/pdf2post/main/blueprint.json    
 Copy latest plugin code https://github.com/ManikinSaute/pdf2post/blob/main/pdf2post.php    
