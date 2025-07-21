@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Append a message to our plugin log.
  *
