@@ -8,7 +8,7 @@ Test it here https://playground.wordpress.net/builder/builder.html
 
 A tool for grabbing a PDF file from a URL, performing OCR, and creating a WordPress post with Gutenberg blocks.
 
-The plugin does the following:
+The plugin does the following: 
 
 - Checks if post revisions are enabled  
 - Registers an Import Custom Post Type — this is where the original data will be saved  
