@@ -1,4 +1,5 @@
 <?php
+die( 'logs.php was loaded and parsed correctly' );
 /**
  * Append a message to our plugin log.
  *
