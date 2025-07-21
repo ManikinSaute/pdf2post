@@ -1,9 +1,9 @@
 # pdf2post
 
-Open in playground https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ManikinSaute/PDF2Post/main/blueprint.json    
-Copy latest plugin code https://github.com/ManikinSaute/PDF2Post/blob/main/pdf2post.php    
+Open in playground https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ManikinSaute/pdf2post/main/blueprint.json    
+Copy latest plugin code https://github.com/ManikinSaute/pdf2post/blob/main/pdf2post.php    
 Paste into /wp-admin/plugin-editor.php   
-edit the blue print here https://github.com/ManikinSaute/PDF2Post/blob/main/blueprint.json    
+edit the blue print here https://github.com/ManikinSaute/pdf2post/blob/main/blueprint.json    
 Test it here https://playground.wordpress.net/builder/builder.html   
 
 A tool for grabbing a PDF file from a URL, performing OCR, and creating a WordPress post with Gutenberg blocks.
