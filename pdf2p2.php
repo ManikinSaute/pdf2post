@@ -1,4 +1,7 @@
 <?php
+
+pdf2p2_log( 'Test entry—logging is working!', 'INFO' );
+
 /*
 Plugin Name: pdf2p2
 Description: PDF import with OCR settings + Status taxonomy
