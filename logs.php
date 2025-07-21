@@ -1,6 +1,4 @@
-// ──────────────────────────────────────────────────────────
-// 8) Logging helper + Admin page for viewing logs/errors
-// ──────────────────────────────────────────────────────────
+<?php
 
 /**
  * Append a message to our plugin log.
