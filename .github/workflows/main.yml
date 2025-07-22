@@ -7,6 +7,8 @@ on:
 
 jobs:
   build:
+    # only run this job when the latest commit message contains the string "zip-it"
+    if: contains(github.event.head_commit.message, 'zip-it')
     runs-on: ubuntu-latest
 
     steps:
