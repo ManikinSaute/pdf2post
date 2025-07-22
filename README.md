@@ -8,6 +8,7 @@ You can edit the [blue print here ](https://github.com/ManikinSaute/pdf2p2/blob/
 
 You can [test edits to a blue print here](https://playground.wordpress.net/builder/builder.html   ) 
 
+If a commit to main contains the word "zip-it" the Zip file will be created and the playground link will be updated to run the code from main. 
 
 A tool for grabbing a PDF file from a URL, performing OCR, and creating a WordPress post with Gutenberg blocks.
 
