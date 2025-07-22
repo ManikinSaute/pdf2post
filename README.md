@@ -70,4 +70,4 @@ API endpoints needed:
     - URL for Markdown  
     - URL for Gutenberg format  
     - Last checked date for Markdown  
-    - Last checked date for Gutenberg
+    - Last checked date for Gutenberg   
