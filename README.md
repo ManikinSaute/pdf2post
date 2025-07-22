@@ -1,10 +1,10 @@
 # pdf2p2  
 
-Open in the [latest version](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ManikinSaute/pdf2p2/main/blueprint.json ) in playground
+Open the [latest version](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ManikinSaute/pdf2p2/main/blueprint.json ) in playground!
 
-You can make changes to [file](https://github.com/ManikinSaute/pdf2p2/blob/main/pdf2p2.php) locally and paste them into the file editor, deactive and reactivate.
+You can make changes to [file](https://github.com/ManikinSaute/pdf2p2/blob/main/pdf2p2.php) locally and paste them into the file editor within WP playground, deactive and reactivate if you cant see your changes.
 
-You can edit the blue print here https://github.com/ManikinSaute/pdf2p2/blob/main/blueprint.json    
+You can edit the [blue print here ](https://github.com/ManikinSaute/pdf2p2/blob/main/blueprint.json    )
 
 You can [test edits to a blue print here](https://playground.wordpress.net/builder/builder.html   ) 
 
