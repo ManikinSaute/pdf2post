@@ -24,18 +24,6 @@ set_error_handler( function( $errno, $errstr, $errfile, $errline ) {
     return false; // Let WP handle it too if WP_DEBUG is on
 } );
 
-// Add “PDF2P2 Logs” under Tools
-add_action( 'admin_menu', function() {
-    add_submenu_page(
-        'tools.php',
-        'PDF2P2 Logs',
-        'PDF2P2 Logs',
-        'manage_options',
-        'pdf2p2-logs',
-        'pdf2p2_render_logs_page'
-    );
-} );
-
 /**
  * Render the Tools → PDF2P2 Logs page.
  */
