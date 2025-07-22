@@ -17,6 +17,10 @@ if ( file_exists( __DIR__ . '/settings.php' ) ) {
     require_once __DIR__ . '/settings.php';
 }
 
+if ( file_exists( __DIR__ . '/logs.php' ) ) {
+    require_once __DIR__ . '/logs.php';
+}
+
 // 1) Register Custom Post Types
 function pdf2p2_register_cpts() {
     $cpts = [
@@ -290,9 +294,11 @@ function pdf2p2_render_page() {
             update_post_meta( $post_id, 'pdf2p2_file_name',         $file_name );
             echo '<p style="color:green; margin-top:15px;">Import post created! (Post ID: ' 
                . esc_html( $post_id ) . ')</p>';
+			pdf2p2_log( "Post creation success, Post ID: $post_id, File name: $file_name", 'INFO' );
         } else {
             echo '<p style="color:red;">Error creating import post: ' 
                . esc_html( $post_id->get_error_message() ) . '</p>';
+			pdf2p2_log( 'Post creation failed ', 'ERROR' );
         }
     }
 
