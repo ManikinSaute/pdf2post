@@ -1,25 +1,18 @@
 <?php
-// 1. Add the Settings page under Settings > pdf2p2
-add_action( 'admin_menu', 'pdf2p2_add_settings_page' );
-function pdf2p2_add_settings_page() {
-    add_options_page(
-        'pdf2p2 Settings',
-        'pdf2p2 Settings',
-        'manage_options',
-        'pdf2p2-settings',
-        'pdf2p2_render_settings_page'
-    );
-}
 
 // 2. Register settings, sections, and fields
 add_action( 'admin_init', 'pdf2p2_register_settings' );
 function pdf2p2_register_settings() {
     // Register each setting (stored in wp_options)
-    register_setting(
-        'pdf2p2_settings_group',
-        'pdf2p2_api_key',
-        [ 'sanitize_callback' => 'pdf2p2_sanitize_api_key' ]
-    );
+	register_setting(
+	  'pdf2p2_settings_group',
+	  'pdf2p2_debug_mode',
+	  [
+		'type'              => 'integer',
+		'sanitize_callback' => 'absint',
+		'default'           => 0,
+	  ]
+	);
     register_setting(
         'pdf2p2_settings_group',
         'pdf2p2_total_docs',
@@ -30,7 +23,11 @@ function pdf2p2_register_settings() {
         'pdf2p2_cron_schedule',
         [ 'sanitize_callback' => 'sanitize_text_field' ]
     );
-
+    register_setting(
+        'pdf2p2_settings_group',
+        'pdf2p2_import_rssfeed_url',
+        [ 'sanitize_callback' => 'esc_url_raw' ]
+    );
     // Add a section
     add_settings_section(
         'pdf2p2_main_section',
@@ -38,7 +35,16 @@ function pdf2p2_register_settings() {
         '__return_false',
         'pdf2p2-settings'
     );
-
+	
+    // RSS feild 
+    add_settings_field(
+        'pdf2p2_import_rssfeed_url',
+        'RSS feed URL',
+        'pdf2p2_import_rssfeed_url_field_cb',
+        'pdf2p2-settings',
+        'pdf2p2_main_section'
+    );
+	
     // API Key field
     add_settings_field(
         'pdf2p2_api_key',
@@ -62,6 +68,14 @@ function pdf2p2_register_settings() {
         'pdf2p2_cron_schedule',
         'Cron Schedule (cron expression)',
         'pdf2p2_cron_schedule_field_cb',
+        'pdf2p2-settings',
+        'pdf2p2_main_section'
+    );
+	    // Debug mode
+    add_settings_field(
+        'pdf2p2_debug_mode',
+        'De-Bug  Mode',
+        'pdf2p2_debug_mode_cb',
         'pdf2p2-settings',
         'pdf2p2_main_section'
     );
@@ -93,6 +107,16 @@ function pdf2p2_api_key_field_cb() {
     );
 }
 
+function pdf2p2_import_rssfeed_url_field_cb() {
+    $pdf2p2_import_rssfeed_url = get_option( 'pdf2p2_import_rssfeed_url', '' );
+    printf(
+        '<input type="url" name="pdf2p2_import_rssfeed_url" value="%s" class="regular-text" />'
+        . '<p class="description">Enter your import RSS feed here.</p>',
+        esc_attr( $pdf2p2_import_rssfeed_url )
+    );
+}
+
+
 function pdf2p2_total_docs_field_cb() {
     $total = get_option( 'pdf2p2_total_docs', 0 );
     printf(
@@ -109,6 +133,24 @@ function pdf2p2_cron_schedule_field_cb() {
         esc_attr( $cron )
     );
 }
+
+function pdf2p2_debug_mode_cb() {
+    // Read the saved debug‐mode flag (0 or 1)
+    $enabled = (int) get_option( 'pdf2p2_debug_mode', 0 );
+
+    // Print a single checkbox
+    printf(
+        '<label for="pdf2p2_debug_mode">
+            <input type="checkbox" id="pdf2p2_debug_mode" name="pdf2p2_debug_mode" value="1" %s />
+            %s
+        </label>
+        <p class="description">%s</p>',
+        checked( 1, $enabled, false ),               // <-- now uses $enabled
+        esc_html__( 'Enable debug mode', 'pdf2p2' ), // label text
+        esc_html__( 'Toggle pdf2p2 debug logging on or off.', 'pdf2p2' ) // description
+    );
+}
+
 
 // 5. Sanitization for API key (preserve existing if left blank)
 function pdf2p2_sanitize_api_key( $input ) {
