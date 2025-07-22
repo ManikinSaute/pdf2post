@@ -12,6 +12,9 @@ License:     GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
 
+require_once ABSPATH . WPINC . '/feed.php';
+require_once ABSPATH . WPINC . '/class-simplepie.php';
+
 // 0) Load settings page if present
 if ( file_exists( __DIR__ . '/settings.php' ) ) {
     require_once __DIR__ . '/settings.php';
@@ -21,12 +24,62 @@ if ( file_exists( __DIR__ . '/logs.php' ) ) {
     require_once __DIR__ . '/logs.php';
 }
 
+add_action('admin_menu', function() {
+    add_menu_page('pdf2p2', 'pdf2p2', 'manage_options', 'pdf2p2_home', 'render_pdf2p2_home_page');
+    // Add RSS Feed as subpage pdf2p2
+    add_submenu_page(
+        'pdf2p2_home',          // parent slug (same as main menu)
+        'pdf2p2 Feed',             // page title (shown on the page)
+        'pdf2p2 Feed',             // menu title (shown in sidebar)
+        'manage_options',       // capability
+        'pdf2p2_rss_feed',      // menu slug (unique identifier)
+        'pdf2p2_render_rss_feed'         // function to display the page
+    );
+	// Add the Settings menu page
+     add_submenu_page(
+        'pdf2p2_home',
+		'pdf2p2 Settings',
+        'pdf2p2 Settings',
+        'manage_options',
+        'pdf2p2_settings',
+        'pdf2p2_render_settings_page'
+    );	
+	// Add the logs menu page
+     add_submenu_page(
+        'pdf2p2_home',
+        'pdf2p2 Logs',
+        'pdf2p2 Logs',
+        'manage_options',
+        'pdf2p2_logs',
+        'pdf2p2_render_logs_page'
+    );
+	// Add the single import menu page
+     add_submenu_page(
+        'pdf2p2_home',
+        'pdf2p2 single import',
+        'pdf2p2 single import',
+        'manage_options',
+        'pdf2p2_single_import',
+        'pdf2p2_render_single_import_page'
+    );
+	// Add the batch import menu page
+     add_submenu_page(
+        'pdf2p2_home',
+        'pdf2p2 bulk import',
+        'pdf2p2 bulk import',
+        'manage_options',
+        'pdf2p2_bulk_import',
+        'pdf2p2_render_bulk_import_page'
+    );
+});
+
+
+
 // 1) Register Custom Post Types
 function pdf2p2_register_cpts() {
     $cpts = [
-        'import'    => ['singular' => 'Import',    'plural' => 'Imports'],
-        'markdown'  => ['singular' => 'MD Post',   'plural' => 'MD Posts'],
-        'gutenberg' => ['singular' => 'GB Post',   'plural' => 'GB Posts'],
+        'pdf2p2_import'    => ['singular' => 'pdf2p2 Import',    'plural' => 'pdf2p2 Imports'],
+        'pdf2p2_gutenberg' => ['singular' => 'pdf2p2 GB Post',   'plural' => 'pdf2p2 GB Posts'],
     ];
     foreach ( $cpts as $slug => $labels ) {
         register_post_type( $slug, [
@@ -47,7 +100,7 @@ add_action( 'init', 'pdf2p2_register_cpts' );
 // 2) Register single‑select “Status” taxonomy + auto‑create terms
 function pdf2p2_register_status_taxonomy() {
     $tax   = 'status';
-    $cpts  = [ 'import', 'markdown', 'gutenberg' ];
+    $cpts  = [ 'pdf2p2_import', 'pdf2p2_gutenberg' ];
     $labels = [
         'name'          => 'Statuses',
         'singular_name' => 'Status',
@@ -104,7 +157,7 @@ function pdf2p2_status_meta_box_cb( $post, $box ) {
 
 // Show “Status” in the CPT list tables
 add_action( 'admin_init', function() {
-    $post_types = [ 'import', 'markdown', 'gutenberg' ];
+    $post_types = [ 'pdf2p2_import', 'pdf2p2_gutenberg' ];
     foreach ( $post_types as $pt ) {
         // register the column header
         add_filter( "manage_{$pt}_posts_columns", function( $cols ) {
@@ -135,7 +188,7 @@ function pdf2p2_save_status_taxonomy( $post_id, $post ) {
         return;
     }
     // Only for our CPTs
-    if ( ! in_array( $post->post_type, [ 'import', 'markdown', 'gutenberg' ], true ) ) {
+    if ( ! in_array( $post->post_type, [ 'pdf2p2_import', 'pdf2p2_gutenberg' ], true ) ) {
         return;
     }
     // Check permissions
@@ -151,21 +204,177 @@ function pdf2p2_save_status_taxonomy( $post_id, $post ) {
     }
 }
 
-// 5) Add “pdf2p2” page under Tools
-function pdf2p2_add_admin_page() {
-    add_submenu_page(
-        'tools.php',
-        'pdf2p2',
-        'pdf2p2',
-        'manage_options',
-        'pdf2p2',
-        'pdf2p2_render_page'
-    );
-}
-add_action( 'admin_menu', 'pdf2p2_add_admin_page' );
 
-// 6) Render Tools → pdf2p2 page
-function pdf2p2_render_page() {
+
+add_action( 'admin_init', 'pdf2p2_register_debug_notices' );
+function pdf2p2_register_debug_notices() {
+    if ( 1 !== (int) get_option( 'pdf2p2_debug_mode', 0 ) ) {
+        return;
+    }
+    add_action( 'admin_notices', 'pdf2p2_check_revisions_notice' );
+    add_action( 'admin_notices', 'sp_loaded_admin_notice' );
+    add_action( 'admin_notices', 'fft_test_fetch_feed' );
+}
+
+function pdf2p2_check_revisions_notice() {
+    if ( ! current_user_can( 'manage_options' ) ) {
+        return;
+    }
+    $rev = WP_POST_REVISIONS;
+    if ( $rev === false ) {
+        $display = 'disabled';
+    } elseif ( is_int( $rev ) ) {
+        $display = $rev;
+    } else {
+        $display = 'default';
+    }
+    echo '<div class="notice notice-info is-dismissible">'
+       . '<p><strong>pdf2p2:</strong> Post revisions are currently <em>' . esc_html( $display ) . '</em>.</p>'
+       . '</div>';
+}
+
+function sp_loaded_admin_notice() {
+	    if ( ! class_exists( 'SimplePie\SimplePie', false ) ) {
+        require_once ABSPATH . WPINC . '/class-simplepie.php';
+    }
+    if ( class_exists( 'SimplePie' ) ) {
+        echo '<div class="notice notice-success is-dismissible">';
+        echo '<p><strong>SimplePie is loaded.</strong> You can safely use fetch_feed() and other SimplePie APIs.</p>';
+        echo '</div>';
+    } else {
+        echo '<div class="notice notice-error is-dismissible">';
+        echo '<p><strong>Warning:</strong> SimplePie is <em>not</em> loaded. RSS parsing functions may not work as expected.</p>';
+        echo '</div>';
+    }
+}
+
+function fft_test_fetch_feed() {
+	    if ( ! class_exists( 'SimplePie\SimplePie', false ) ) {
+        require_once ABSPATH . WPINC . '/class-simplepie.php';
+    }
+    // Change this to any public RSS feed URL you like
+    $test_url = 'https://feeds.bbci.co.uk/news/rss.xml';
+    $feed = fetch_feed( $test_url );
+
+    // Handle errors / no items
+    if ( is_wp_error( $feed ) ) {
+        echo '<div class="notice notice-error is-dismissible">';
+        echo '<p><strong>Fetch Feed Tester:</strong> Error fetching feed: '
+             . esc_html( $feed->get_error_message() ) . '</p>';
+        echo '</div>';
+        return;
+    }
+
+    $max_items = $feed->get_item_quantity( 1 ); // just check for at least 1
+    if ( $max_items > 0 ) {
+        echo '<div class="notice notice-success is-dismissible">';
+        echo '<p><strong>Fetch Feed Tester:</strong> Success! '
+             . esc_html( $max_items ) . ' item(s) retrieved from the feed.</p>';
+        echo '</div>';
+    } else {
+        echo '<div class="notice notice-warning is-dismissible">';
+        echo '<p><strong>Fetch Feed Tester:</strong> No items found in the feed.</p>';
+        echo '</div>';
+    }
+}
+
+
+function pdf2p2_render_rss_feed() {
+    $feed_url = get_option(
+        'pdf2p2_import_rssfeed_url',
+        'https://www.amnesty.org/en/latest/feed/'
+    );
+    $response = wp_remote_get( $feed_url );
+
+    if ( is_wp_error( $response ) ) {
+        echo '<div class="notice notice-error"><p>Request failed: '
+           . esc_html( $response->get_error_message() ) . '</p></div>';
+        return;
+    }
+
+    $body = wp_remote_retrieve_body( $response );
+    if ( empty( $body ) ) {
+        echo '<div class="notice notice-warning"><p>Empty feed response.</p></div>';
+        return;
+    }
+
+    libxml_use_internal_errors( true );
+    $xml = simplexml_load_string( $body );
+    if ( false === $xml ) {
+        echo '<div class="notice notice-error"><p>Failed to parse XML.</p></div>';
+        foreach ( libxml_get_errors() as $error ) {
+            echo '<div><code>' . esc_html( $error->message ) . '</code></div>';
+        }
+        libxml_clear_errors();
+        return;
+    }
+
+    if ( empty( $xml->channel->item ) ) {
+        echo '<div class="notice notice-warning"><p>No items found in feed.</p></div>';
+        return;
+    }
+
+    echo '<div class="wrap">';
+    echo '<h1>RSS Feed: All Items</h1>';
+    echo '<p><strong>Feed URL:</strong> <a href="' . esc_url( $feed_url )
+       . '" target="_blank">' . esc_html( $feed_url ) . '</a></p>';
+
+    echo '<div style="max-height:500px; overflow:auto; padding:0.5em; border:1px solid #ddd; background:#fff;">';
+    echo '<ul style="list-style:disc inside; margin:0; padding:0;">';
+
+    foreach ( $xml->channel->item as $item ) {
+        $title = sanitize_text_field( (string) $item->title );
+        $link  = esc_url( (string) $item->link );
+        $pubDate = isset( $item->pubDate )
+            ? date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( (string) $item->pubDate ) )
+            : '';
+
+        echo '<li style="margin-bottom:1em;">';
+        echo '<a href="' . $link . '" target="_blank"><strong>' . esc_html( $title ) . '</strong></a>';
+        if ( $pubDate ) {
+            echo ' <em>(' . esc_html( $pubDate ) . ')</em>';
+        }
+        echo '</li>';
+    }
+
+    echo '</ul>';
+    echo '</div>';  // scrollable container
+	
+  // Now display **all** the <guid> URLs
+    echo '<div style="margin-top:2em;">';
+    echo '<h2>PDF File Paths</h2>';
+
+    foreach ( $xml->channel->item as $item ) {
+        if ( isset( $item->guid ) ) {
+            $pdf_url = esc_url_raw( (string) $item->guid );
+            // Only show if it looks like a PDF
+            if ( false !== stripos( $pdf_url, '.pdf' ) ) {
+                echo '<p><code>' . esc_html( $pdf_url ) . '</code></p>';
+            }
+        }
+    }
+    echo '<a href="' . esc_url( menu_page_url( 'pdf2p2_bulk_import', false ) ) . '" class="button">Bulk Import</a>';
+    echo '</div>';  // end GUIDs container
+    echo '</div>';  // wrap
+}
+
+
+
+function pdf2p2_render_bulk_import_page() {
+    echo '<div class="wrap"><h1>pdf2p2 - Bulk Imports</h1>';
+	echo '<div class="wrap">Add UI here to paste in a List of files to be processed</p>';
+	echo '<div class="wrap">Add a UI to show progress</p>';
+}
+
+
+function render_pdf2p2_home_page() {
+    echo '<div class="wrap"><h1>pdf2p2 - Welcome Home!</h1>';
+	echo '<div class="wrap">Add UI here to show some info about the project</p>';
+	echo '<div class="wrap">Maybe a dashboard with some graphs :-) </p>';
+}
+
+    // To do: seperate the logic from the page render 
+function pdf2p2_render_single_import_page() {
     ?>
     <div class="wrap">
       <h1>Import PDF</h1>
@@ -185,7 +394,7 @@ function pdf2p2_render_page() {
 
         // Duplicate check
         $existing = get_posts([
-            'post_type'   => 'import',
+            'post_type'   => 'pdf2p2_import',
             'numberposts' => 1,
             'meta_query'  => [
                 'relation' => 'OR',
@@ -258,7 +467,7 @@ function pdf2p2_render_page() {
                   <input type="hidden" name="pdf_new_url"         value="<?php echo esc_url( $attach_url ); ?>">
                   <input type="hidden" name="pdf_file_hash"       value="<?php echo esc_attr( $file_hash ); ?>">
                   <input type="hidden" name="pdf_file_name"       value="<?php echo esc_attr( $file_name ); ?>">
-                  <input type="submit" name="import_post_submit"
+                  <input type="submit" name="pdf2p2_import_post_submit"
                          class="button button-secondary" value="Import Post">
                 </form>
                 <?php
@@ -267,7 +476,7 @@ function pdf2p2_render_page() {
     }
 
     // Handle the Import Post creation
-    if ( isset( $_POST['import_post_submit'] ) 
+    if ( isset( $_POST['pdf2p2_import_post_submit'] ) 
       && wp_verify_nonce( $_POST['pdf2p2_import_nonce'], 'pdf2p2_import' ) ) {
 
         $attach_id    = intval( $_POST['pdf_attachment_id'] );
@@ -304,22 +513,3 @@ function pdf2p2_render_page() {
 
     echo '</div>';
 }
-
-// 7) Admin notice: current WP_POST_REVISIONS
-function pdf2p2_check_revisions_notice() {
-    if ( ! current_user_can( 'manage_options' ) ) {
-        return;
-    }
-    $rev = WP_POST_REVISIONS;
-    if ( $rev === false ) {
-        $display = 'disabled';
-    } elseif ( is_int( $rev ) ) {
-        $display = $rev;
-    } else {
-        $display = 'default';
-    }
-    echo '<div class="notice notice-info is-dismissible">'
-       . '<p><strong>pdf2p2:</strong> Post revisions are currently <em>' . esc_html( $display ) . '</em>.</p>'
-       . '</div>';
-}
-add_action( 'admin_notices', 'pdf2p2_check_revisions_notice' );
