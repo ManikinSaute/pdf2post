@@ -490,7 +490,7 @@ function pdf2p2_render_single_import_page() {
             'post_title'   => $file_name,
             'post_content' => 'In the future we will move in the actual content from the PDF but will need to run the OCR tools first.',
             'post_status'  => 'publish',
-            'post_type'    => 'import',
+            'post_type'    => 'pdf2p2_import',
         ]);
 
         if ( ! is_wp_error( $post_id ) ) {
