@@ -25,3 +25,4 @@ require_once __DIR__ . '/settings.php';
 require_once __DIR__ . '/feed.php';
 require_once __DIR__ . '/pdf2p2-home.php';
 require_once __DIR__ . '/md-gb.php';
+require_once __DIR__ . '/default-content';
