@@ -21,7 +21,8 @@ jobs:
 
       - name: Create ZIP file
         run: |
-          zip pdf2p2.zip pdf2p2.php settings.php logs.php bulk.php feed.php menu.php single-import.php cpt-terms.php pdf2p2-home.php md-gb.txt
+          zip pdf2p2.zip pdf2p2.php settings.php logs.php bulk.php feed.php menu.php single-import.php cpt-terms.php pdf2p2-home.php md-gb.php md-example.txt
+
 
       - name: Commit ZIP file
         run: |
