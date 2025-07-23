@@ -15,9 +15,6 @@ function pdf2p2_create_import_post( $title, $content ) {
     return wp_insert_post( $post_args );
 }
 
-// Now that our helper exists, register the activation hook only once:
-register_activation_hook( __FILE__, 'pdf2p2_import_md_example_on_activate' );
-
 function pdf2p2_import_md_example_on_activate() {
     $file_path = plugin_dir_path( __FILE__ ) . 'md-example.txt';
 
