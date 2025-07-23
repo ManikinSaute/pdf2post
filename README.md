@@ -26,8 +26,8 @@ A tool for...
  
 ## Some other stuff the plugin does 
 
-- Registers an Import Custom Post Type — this is where the original data will be saved in MD format  
-- Registers a Gutenberg Custom Post Type — this is where we will save the Gutenberg version of the content  
+- Registers an Import Custom Post Type, this is where the original data will be saved in MD format  
+- Registers a Gutenberg Custom Post Type, this is where we will save the Gutenberg version of the content  
 - Creates a sidebar settings tab with...
 - A dashboard 
 - Logging
