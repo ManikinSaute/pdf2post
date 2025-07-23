@@ -26,3 +26,4 @@ require_once __DIR__ . '/feed.php';
 require_once __DIR__ . '/pdf2p2-home.php';
 require_once __DIR__ . '/md-gb.php';
 require_once __DIR__ . '/default-content.php';
+register_activation_hook( __FILE__, 'pdf2p2_activate' );
