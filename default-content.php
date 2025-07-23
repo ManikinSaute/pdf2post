@@ -1,9 +1,9 @@
 <?php
 
 
-function pdf2p2_create_gb_post( $title, $content ) {
+function pdf2p2_create_import_post( $title, $content ) {
     $post_args = [
-        'post_type'    => 'pdf2p2_gutenberg',
+        'post_type'    => 'pdf2p2_import',
         'post_title'   => sanitize_text_field( $title ),
         'post_content' => wp_kses_post( $content ),
         'post_status'  => 'publish',
@@ -15,6 +15,7 @@ function pdf2p2_create_gb_post( $title, $content ) {
     return wp_insert_post( $post_args );
 }
 
+// Now that our helper exists, register the activation hook only once:
 register_activation_hook( __FILE__, 'pdf2p2_import_md_example_on_activate' );
 
 function pdf2p2_import_md_example_on_activate() {
@@ -31,7 +32,7 @@ function pdf2p2_import_md_example_on_activate() {
         return;
     }
 
-     $result = pdf2p2_create_gb_post( 'Markdown Cheat Sheet', $content );
+     $result = pdf2p2_create_import_post( 'Markdown Cheat Sheet', $content );
 
     if ( is_wp_error( $result ) ) {
         error_log( 'pdf2p2_gb_import error: ' . $result->get_error_message() );
