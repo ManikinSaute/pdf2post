@@ -69,3 +69,79 @@ function pdf2p2_render_logs_page() {
 
     echo '</div>';
 }
+
+
+// notices
+
+add_action( 'admin_init', 'pdf2p2_register_debug_notices' );
+function pdf2p2_register_debug_notices() {
+    if ( 1 !== (int) get_option( 'pdf2p2_debug_mode', 0 ) ) {
+        return;
+    }
+    add_action( 'admin_notices', 'pdf2p2_check_revisions_notice' );
+    add_action( 'admin_notices', 'sp_loaded_admin_notice' );
+    add_action( 'admin_notices', 'fft_test_fetch_feed' );
+}
+
+function pdf2p2_check_revisions_notice() {
+    if ( ! current_user_can( 'manage_options' ) ) {
+        return;
+    }
+    $rev = WP_POST_REVISIONS;
+    if ( $rev === false ) {
+        $display = 'disabled';
+    } elseif ( is_int( $rev ) ) {
+        $display = $rev;
+    } else {
+        $display = 'default';
+    }
+    echo '<div class="notice notice-info is-dismissible">'
+       . '<p><strong>pdf2p2:</strong> Post revisions are currently <em>' . esc_html( $display ) . '</em>.</p>'
+       . '</div>';
+}
+
+function sp_loaded_admin_notice() {
+	    if ( ! class_exists( 'SimplePie\SimplePie', false ) ) {
+        require_once ABSPATH . WPINC . '/class-simplepie.php';
+    }
+    if ( class_exists( 'SimplePie' ) ) {
+        echo '<div class="notice notice-success is-dismissible">';
+        echo '<p><strong>SimplePie is loaded.</strong> You can safely use fetch_feed() and other SimplePie APIs.</p>';
+        echo '</div>';
+    } else {
+        echo '<div class="notice notice-error is-dismissible">';
+        echo '<p><strong>Warning:</strong> SimplePie is <em>not</em> loaded. RSS parsing functions may not work as expected.</p>';
+        echo '</div>';
+    }
+}
+
+function fft_test_fetch_feed() {
+	    if ( ! class_exists( 'SimplePie\SimplePie', false ) ) {
+        require_once ABSPATH . WPINC . '/class-simplepie.php';
+    }
+    // Change this to any public RSS feed URL you like
+    $test_url = 'https://feeds.bbci.co.uk/news/rss.xml';
+    $feed = fetch_feed( $test_url );
+
+    // Handle errors / no items
+    if ( is_wp_error( $feed ) ) {
+        echo '<div class="notice notice-error is-dismissible">';
+        echo '<p><strong>Fetch Feed Tester:</strong> Error fetching feed: '
+             . esc_html( $feed->get_error_message() ) . '</p>';
+        echo '</div>';
+        return;
+    }
+
+    $max_items = $feed->get_item_quantity( 1 ); // just check for at least 1
+    if ( $max_items > 0 ) {
+        echo '<div class="notice notice-success is-dismissible">';
+        echo '<p><strong>Fetch Feed Tester:</strong> Success! '
+             . esc_html( $max_items ) . ' item(s) retrieved from the feed.</p>';
+        echo '</div>';
+    } else {
+        echo '<div class="notice notice-warning is-dismissible">';
+        echo '<p><strong>Fetch Feed Tester:</strong> No items found in the feed.</p>';
+        echo '</div>';
+    }
+}
+
