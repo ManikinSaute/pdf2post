@@ -1,4 +1,6 @@
 name: Zip and Commit
+permissions:
+  contents: write
 
 on:
   push:
@@ -6,18 +8,20 @@ on:
       - main
 
 jobs:
-  build:
-    # only run this job when the latest commit message contains the string "zip-it"
+  zip:
     if: contains(github.event.head_commit.message, 'zip-it')
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
 
       - name: Create ZIP file
         run: |
-          zip pdf2p2.php settings.php logs.php bulk.php feed.php menu.php single-import.php
+          zip pdf2p2.zip pdf2p2.php settings.php logs.php bulk.php feed.php menu.php single-import.php
 
       - name: Commit ZIP file
         run: |
