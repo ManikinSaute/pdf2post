@@ -15,7 +15,7 @@ A tool for...
 - TO DO: Automate the processing of new PDFs via a CRON job.
 - TO DO: Provide access to another WordPress site to collect the data.
 - TO DO: Remove old PDFs but keep the file hashes, dates and file names.
-- TO DO: create a page for converting a single PDF that is not online, and create a DRAFT.
+- TO DO: create a page for converting a single PDF that is not online, and create a DRAFT.  
 
 ## Demo & Test
 
