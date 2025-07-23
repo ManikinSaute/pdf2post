@@ -41,5 +41,7 @@ A tool for...
 - Human verified
 - Staff verified 
 
+Thanks :-) 
+
 
 
