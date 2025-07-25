@@ -45,7 +45,7 @@ function pdf2p2_render_md_processor_page() {
 }
 
 function pdf2p2_convert_markdown_to_gutenberg($post_id) {
-    require_once __DIR__ . '/Parsedown.php';
+    require_once plugin_dir_path( __FILE__ ) . 'Parsedown.php';
 
     $post = get_post($post_id);
     if (!$post || $post->post_type !== 'pdf2p2_import') return;
