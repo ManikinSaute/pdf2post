@@ -19,8 +19,7 @@ function pdf2p2_admin_menu() {
         ['slug' => 'pdf2p2_rss_feed',       'title' => 'pdf2p2 Feed',          'callback' => 'pdf2p2_render_rss_feed'],
         ['slug' => 'pdf2p2_settings',       'title' => 'pdf2p2 Settings',      'callback' => 'pdf2p2_render_settings_page'],
         ['slug' => 'pdf2p2_logs',           'title' => 'pdf2p2 Logs',          'callback' => 'pdf2p2_render_logs_page'],
-        ['slug' => 'pdf2p2_single_import',  'title' => 'pdf2p2 Single Import', 'callback' => 'pdf2p2_render_single_import_page'],
-        ['slug' => 'pdf2p2_bulk_import',    'title' => 'pdf2p2 Bulk Import',   'callback' => 'pdf2p2_render_bulk_import_page'],
+        ['slug' => 'pdf2p2_import',         'title' => 'pdf2p2 Import',        'callback' => 'pdf2p2_render_import_page'],
     ];
 
     foreach ( $subs as $sub ) {

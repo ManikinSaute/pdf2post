@@ -21,12 +21,17 @@ function pdf2p2_register_settings() {
     register_setting(
         'pdf2p2_settings_group',
         'pdf2p2_cron_schedule',
-        [ 'sanitize_callback' => 'sanitize_text_field' ]
+        [
+            'sanitize_callback' => 'sanitize_text_field',
+            'default'           => 'daily', // use WP default
+        ]
     );
     register_setting(
         'pdf2p2_settings_group',
         'pdf2p2_import_rssfeed_url',
-        [ 'sanitize_callback' => 'esc_url_raw' ]
+        [ 'sanitize_callback' => 'esc_url_raw',
+          'default'           => 'https://www.amnesty.org/en/latest/feed/',
+ ]
     );
     // Add a section
     add_settings_section(
@@ -66,7 +71,7 @@ function pdf2p2_register_settings() {
     // Cron schedule field
     add_settings_field(
         'pdf2p2_cron_schedule',
-        'Cron Schedule (cron expression)',
+        'Cron Schedule',
         'pdf2p2_cron_schedule_field_cb',
         'pdf2p2-settings',
         'pdf2p2_main_section'
@@ -111,7 +116,7 @@ function pdf2p2_import_rssfeed_url_field_cb() {
     $pdf2p2_import_rssfeed_url = get_option( 'pdf2p2_import_rssfeed_url', '' );
     printf(
         '<input type="url" name="pdf2p2_import_rssfeed_url" value="%s" class="regular-text" />'
-        . '<p class="description">Enter your import RSS feed here.</p>',
+        . '<p class="description">Enter your import RSS feed here. <br /> Leaving this blank can cause issues https://www.amnesty.org/en/latest/feed/.</p>',
         esc_attr( $pdf2p2_import_rssfeed_url )
     );
 }
@@ -126,12 +131,21 @@ function pdf2p2_total_docs_field_cb() {
 }
 
 function pdf2p2_cron_schedule_field_cb() {
-    $cron = get_option( 'pdf2p2_cron_schedule', '0 2 * * *' );
-    printf(
-        '<input type="text" name="pdf2p2_cron_schedule" value="%s" class="regular-text" />'
-        . '<p class="description">Enter a valid cron expression for ingestion runs.</p>',
-        esc_attr( $cron )
-    );
+    // Pull in all registered WP cron schedules
+    $schedules = wp_get_schedules();
+    $current  = get_option( 'pdf2p2_cron_schedule', 'daily' );
+
+    echo '<select name="pdf2p2_cron_schedule">';
+    foreach ( $schedules as $key => $sched ) {
+        printf(
+            '<option value="%1$s" %2$s>%3$s</option>',
+            esc_attr( $key ),
+            selected( $current, $key, false ),
+            esc_html( $sched['display'] )
+        );
+    }
+    echo '</select>';
+    echo '<p class="description">Select how often to run the ingestion job.</p>';
 }
 
 function pdf2p2_debug_mode_cb() {

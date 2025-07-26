@@ -1,0 +1,24 @@
+{
+  "landingPage": "/wp-admin/admin.php?page=pdf2p2_home",
+  "login": true,
+  "phpExtensionBundles": [
+        "kitchen-sink"
+    ],
+  "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "url",
+        "url": "https://manikinsaute.github.io/pdf2p2/pdf2p2-stable.zip"
+      }
+    },
+    {
+      "step": "rm",
+      "path": "/wordpress/wp-content/plugins/hello.php"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp config set WP_POST_REVISIONS 0 --raw"
+    }
+  ]
+}
