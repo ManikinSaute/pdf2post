@@ -70,9 +70,18 @@ function pdf2p2_process_pdf_urls( array $urls, $force = false ) {
         $file_hash  = hash_file( 'sha256', $file_path );
         $attach_url = wp_get_attachment_url( $attach_id );
 
+        $md_file = plugin_dir_path( __FILE__ ) . 'md-example.txt';
+
+        if ( file_exists( $md_file ) ) {
+            // Read the whole file
+            $content = file_get_contents( $md_file );
+        } else {
+            $content = 'OCR content';
+        }
+
         $post_id = wp_insert_post( [
             'post_title'   => $file_name,
-            'post_content' => '… (future OCR content) …',
+            'post_content' => $content,
             'post_status'  => 'publish',
             'post_type'    => 'pdf2p2_import',
         ] );

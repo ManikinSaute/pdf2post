@@ -1,21 +1,27 @@
 <?php
 
+// Ensure 'status' taxonomy is registered for both post types
+add_action('init', function () {
+    register_taxonomy_for_object_type('status', 'pdf2p2_import');
+    register_taxonomy_for_object_type('status', 'pdf2p2_gutenberg');
+});
+
 add_action('admin_menu', function () {
     add_submenu_page(
         'tools.php',
         'Process Staff Verified Markdown',
-        'Process MD Imports',
+        'pdf2p2 Process MD Imports',
         'manage_options',
         'pdf2p2-md-convert',
         'pdf2p2_render_md_processor_page'
     );
 });
- /*
+
 function pdf2p2_render_md_processor_page() {
     if (isset($_POST['convert_post_id'])) {
         $post_id = (int) $_POST['convert_post_id'];
-        pdf2p2_convert_markdown_to_gutenberg($post_id);
-        echo '<div class="notice notice-success"><p>Post converted successfully!</p></div>';
+        pdf2p2_move_post_to_gutenberg($post_id);
+        echo '<div class="notice notice-success"><p>Post moved successfully!</p></div>';
     }
 
     $staff_verified = get_posts([
@@ -44,52 +50,37 @@ function pdf2p2_render_md_processor_page() {
     echo '</ul></div>';
 }
 
-function pdf2p2_convert_markdown_to_gutenberg($post_id) {
-    require_once plugin_dir_path( __FILE__ ) . 'Parsedown.php';
-
+function pdf2p2_move_post_to_gutenberg($post_id) {
     $post = get_post($post_id);
-    if (!$post || $post->post_type !== 'pdf2p2_import') return;
-
-    $markdown = $post->post_content;
-    $parsedown = new Parsedown();
-    $html = $parsedown->text($markdown);
-
-    if (empty($html)) {
-        error_log("Empty HTML generated from Markdown (Post ID: $post_id)");
+    if (!$post || $post->post_type !== 'pdf2p2_import') {
         return;
     }
 
-    libxml_use_internal_errors(true);
-    $dom = new DOMDocument();
-    $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html);
-    $body = $dom->getElementsByTagName('body')->item(0);
-
-    if (!$body) {
-        error_log("DOMDocument could not find <body> (Post ID: $post_id)");
-        return;
+    // Make sure Parsedown is available
+    if ( ! class_exists( 'Parsedown' ) ) {
+        require_once plugin_dir_path( __FILE__ ) . 'Parsedown.php';
     }
+    $Parsedown = new Parsedown();
 
-    $blocks = [];
-    foreach ($body->childNodes as $node) {
-        if ($node->nodeType !== XML_ELEMENT_NODE) continue;
-        $blocks[] = pdf2p2_convert_node_to_block($node);
-    }
+    // Convert Markdown to HTML
+    $html_content = $Parsedown->text($post->post_content);
 
-    $gutenberg_content = implode("\n\n", array_filter($blocks));
+    // Convert HTML paragraphs to Gutenberg paragraph blocks
+    $blocks_content = preg_replace(
+        '/<p>(.*?)<\/p>/is',
+        "<!-- wp:paragraph -->\n<p>$1</p>\n<!-- /wp:paragraph -->",
+        $html_content
+    );
 
-    $new_id = wp_insert_post([
+    // Update post with Gutenberg block content and change post type
+    wp_update_post([
+        'ID'           => $post_id,
         'post_type'    => 'pdf2p2_gutenberg',
-        'post_status'  => 'publish',
-        'post_title'   => $post->post_title,
-        'post_content' => $gutenberg_content,
+        'post_status'  => 'draft',
+        'post_content' => $blocks_content,
     ]);
 
-    if (is_wp_error($new_id)) {
-        error_log("wp_insert_post failed: " . $new_id->get_error_message());
-        return;
-    }
-
-    wp_set_object_terms($new_id, 'human-verified', 'status', false);
-    wp_delete_post($post_id, true);
+    wp_set_object_terms($post_id, 'human-verified', 'status', false);
 }
-*/
+
+
