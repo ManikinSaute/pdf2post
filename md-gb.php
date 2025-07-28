@@ -1,21 +1,6 @@
 <?php
 
-// Ensure 'status' taxonomy is registered for both post types
-add_action('init', function () {
-    register_taxonomy_for_object_type('status', 'pdf2p2_import');
-    register_taxonomy_for_object_type('status', 'pdf2p2_gutenberg');
-});
 
-add_action('admin_menu', function () {
-    add_submenu_page(
-        'tools.php',
-        'Process Staff Verified Markdown',
-        'pdf2p2 Process MD Imports',
-        'manage_options',
-        'pdf2p2-md-convert',
-        'pdf2p2_render_md_processor_page'
-    );
-});
 
 function pdf2p2_render_md_processor_page() {
     if (isset($_POST['convert_post_id'])) {

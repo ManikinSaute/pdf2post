@@ -27,12 +27,14 @@ function pdf2p2_register_cpts() {
             'supports'      => [ 'title', 'editor', 'custom-fields' ],
             // Explicitly enable REST API for Gutenberg
             'show_in_rest'  => ( $slug === 'pdf2p2_gutenberg' ) ? true : false,
+            'menu_icon'     => 'dashicons-media-document', 
         ];
 
         register_post_type( $slug, $args );
     }
 }
 add_action( 'init', 'pdf2p2_register_cpts' );
+
 
 /**
  * 2) Register “Status” Taxonomy with a <select multiple> meta box
@@ -153,3 +155,11 @@ add_action( 'admin_init', function() {
         }, 10, 2 );
     }
 } );
+
+
+// Ensure 'status' taxonomy is registered for both post types
+add_action('init', function () {
+    register_taxonomy_for_object_type('status', 'pdf2p2_import');
+    register_taxonomy_for_object_type('status', 'pdf2p2_gutenberg');
+});
+

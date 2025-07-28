@@ -3,12 +3,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-/**
- * Fetch RSS/Atom feed, extract PDF URLs, diff vs. already-imported.
- *
- * @param string $feed_url
- * @return string[] Array of PDF URLs not yet imported.
- */
 function pdf2p2_get_feed_not_imported( $feed_url = '' ) {
     if ( empty( $feed_url ) || ! filter_var( $feed_url, FILTER_VALIDATE_URL ) ) {
         $feed_url = 'https://www.amnesty.org/en/latest/feed/';
@@ -37,7 +31,7 @@ function pdf2p2_get_feed_not_imported( $feed_url = '' ) {
 
     // Already-imported
     $posts = get_posts( [
-        'post_type'      => 'pdf2p2_import',
+        'post_type'      => [ 'pdf2p2_import', 'pdf2p2_gutenberg' ],
         'posts_per_page' => -1,
         'post_status'    => 'any',
         'meta_query'     => [[ 'key' => 'pdf2p2_original_file_path', 'compare' => 'EXISTS' ]],
@@ -108,9 +102,8 @@ function pdf2p2_render_rss_feed() {
         return;
     }
 
-    // Gather already-imported URLs
     $imported_posts = get_posts( [
-        'post_type'      => 'pdf2p2_import',
+        'post_type'      => [ 'pdf2p2_import', 'pdf2p2_gutenberg' ],
         'posts_per_page' => -1,
         'post_status'    => 'any',
         'meta_query'     => [[
@@ -118,6 +111,7 @@ function pdf2p2_render_rss_feed() {
             'compare' => 'EXISTS',
         ]],
     ] );
+
     $imported_paths = [];
     foreach ( $imported_posts as $post ) {
         $path = get_post_meta( $post->ID, 'pdf2p2_original_file_path', true );
@@ -168,12 +162,21 @@ function pdf2p2_render_rss_feed() {
         echo '<p>No PDF URLs found in feed.</p>';
     }
 
-    // B) Already imported
+    // B) Already imported (including pdf2p2_guttenberg)
     echo '<h2 style="margin-top:2em;">Already Imported PDFs</h2>';
     if ( $imported_paths ) {
         echo '<ul style="list-style:disc inside;">';
-        foreach ( $imported_paths as $url ) {
-            echo '<li><code>' . esc_html( $url ) . '</code></li>';
+        foreach ( $imported_posts as $post ) {
+            $path = get_post_meta( $post->ID, 'pdf2p2_original_file_path', true );
+            if ( $path ) {
+                $url = esc_url_raw( $path );
+                $title = get_the_title( $post->ID );
+                $post_type = get_post_type( $post->ID );
+                echo '<li><code>' . esc_html( $url ) . '</code>';
+                echo ' &mdash; <strong>' . esc_html( $title ) . '</strong>';
+                echo ' <em>(' . esc_html( $post_type ) . ')</em>';
+                echo '</li>';
+            }
         }
         echo '</ul>';
     } else {
@@ -207,3 +210,5 @@ function pdf2p2_render_rss_feed() {
 
     echo '</div>';
 }
+
+

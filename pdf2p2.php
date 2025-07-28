@@ -2,7 +2,7 @@
 /*
 Plugin Name: pdf2p2
 Description: PDF import with OCR settings + Status taxonomy
-Version:     1.5
+Version:     1.6
 Author:      Thomas Parsons
 Requires at least: 6.7
 Tested up to:      6.7
