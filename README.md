@@ -11,8 +11,8 @@ A tool for...
 - Automatically grabs all the unimported PDFs from the RSS feed with a Cron job.  
 - TO DO: Connecting to the Minstal OCR API and sending a PDF file with an API key.
 - TO DO: Recieveing mark down content back from the Minstral API, along with any images returned.
-- TO DO: Parsing the MD into the Guttenberg format.
-- TO DO: Setting the status of the post from, unprocessed, processed, human verified and staff verified.
+- Parses the MD into HTML (using Parsedown) the HTML is transformed to Guttenberg within the editor.
+- Posts are automaticly re set to humany verified as a staff verification set will be required to review the content transform.
 - TO DO: Provide access to another WordPress site to collect the data.
 - TO DO: Remove old PDFs but keep the file hashes, dates and file names.
 - TO DO: create a page for converting a single PDF that is not online, and create a DRAFT.  
