@@ -12,7 +12,7 @@ function render_pdf2p2_home_page() {
 	echo '<div class="wrap">';
 	echo '<h1>pdf2p2 - Welcome Home!</h1>';
 	echo '<p>Follow these steps to get started with the pdf2p2 plugin:</p>';
-	echo '<ol>';
+	echo '<ol> ';
 	echo '<li>Go to the <a href="' . esc_url($settings_url) . '">Settings page</a> and add an RSS feed URL.</li>';
 	echo '<li>Visit the <a href="' . esc_url($feed_url) . '">Feed page</a> to check for PDFs that need importing.</li>';
 	echo '<li>Add PDF files manually on the <a href="' . esc_url($import_url) . '">Import page</a>.</li>';
