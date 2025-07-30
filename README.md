@@ -41,7 +41,7 @@ A tool for...
 - Unprocessed
 - Processed
 - Human verified
-- Staff verified 
+- Staff verified     
 
 Thanks :-) 
 
