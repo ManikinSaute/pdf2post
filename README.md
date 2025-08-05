@@ -1,4 +1,4 @@
-# pdf2p2  
+# pdf2p2     
 
 PDFs to Posts, there was already a PDF2Post plugin, so we decided to append our plugin with a 2 and shorten it a bit, so we now have pdf2p2.
 
