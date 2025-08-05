@@ -10,7 +10,11 @@ function render_pdf2p2_home_page() {
 	$github_url	= 'https://github.com/ManikinSaute/pdf2p2';
 
 	echo '<div class="wrap">';
-	echo '<h1>pdf2p2 - Welcome Home!</h1>';
+	echo '<h1>pdf2p2 - Welcome</h1>';
+	echo '<p>We have two Custom Post Types: Import and Gutenberg</p>';
+	echo '<p>We have a Custom Taxonomy with the following terms: Un Verified, Human Verified and Staff Verified</p>';
+	echo '<p>We have some speical post meta, OCR Processed and it is set to True or False</p>';
+	echo '<h2>How to used this plugin</h2>';
 	echo '<p>Follow these steps to get started with the pdf2p2 plugin:</p>';
 	echo '<ol> ';
 	echo '<li>Go to the <a href="' . esc_url($settings_url) . '">Settings page</a> and add an RSS feed URL.</li>';

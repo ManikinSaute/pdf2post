@@ -1,9 +1,7 @@
 <?php
 
-// 2. Register settings, sections, and fields
 add_action( 'admin_init', 'pdf2p2_register_settings' );
 function pdf2p2_register_settings() {
-    // Register each setting (stored in wp_options)
 	register_setting(
 	  'pdf2p2_settings_group',
 	  'pdf2p2_debug_mode',
@@ -23,7 +21,7 @@ function pdf2p2_register_settings() {
         'pdf2p2_cron_schedule',
         [
             'sanitize_callback' => 'sanitize_text_field',
-            'default'           => 'daily', // use WP default
+            'default'           => 'daily', 
         ]
     );
     register_setting(
@@ -33,33 +31,35 @@ function pdf2p2_register_settings() {
           'default'           => 'https://www.amnesty.org/en/latest/feed/',
  ]
     );
-    // Add a section
+    register_setting(
+        'pdf2p2_settings_group',
+        'pdf2p2_api_key',
+        [
+            'type'              => 'string',
+            'sanitize_callback' => 'pdf2p2_sanitize_api_key',
+            'default'           => '',
+        ]
+    );
     add_settings_section(
         'pdf2p2_main_section',
         'OCR & Ingestion Settings',
         '__return_false',
         'pdf2p2-settings'
     );
-	
-    // RSS feild 
-    add_settings_field(
+	    add_settings_field(
         'pdf2p2_import_rssfeed_url',
         'RSS feed URL',
         'pdf2p2_import_rssfeed_url_field_cb',
         'pdf2p2-settings',
         'pdf2p2_main_section'
     );
-	
-    // API Key field
-    add_settings_field(
+	    add_settings_field(
         'pdf2p2_api_key',
         'OCR API Key',
         'pdf2p2_api_key_field_cb',
         'pdf2p2-settings',
         'pdf2p2_main_section'
     );
-
-    // Total docs field
     add_settings_field(
         'pdf2p2_total_docs',
         'Total Documents to Ingest',
@@ -67,8 +67,6 @@ function pdf2p2_register_settings() {
         'pdf2p2-settings',
         'pdf2p2_main_section'
     );
-
-    // Cron schedule field
     add_settings_field(
         'pdf2p2_cron_schedule',
         'Cron Schedule',
@@ -76,7 +74,6 @@ function pdf2p2_register_settings() {
         'pdf2p2-settings',
         'pdf2p2_main_section'
     );
-	    // Debug mode
     add_settings_field(
         'pdf2p2_debug_mode',
         'De-Bug  Mode',
@@ -86,30 +83,23 @@ function pdf2p2_register_settings() {
     );
 }
 
-// 3. Render the Settings page
-function pdf2p2_render_settings_page() {
-    ?>
-    <div class="wrap">
-        <h1>pdf2p2 Settings</h1>
-        <form method="post" action="options.php">
-            <?php
-            settings_fields( 'pdf2p2_settings_group' );
-            do_settings_sections( 'pdf2p2-settings' );
-            submit_button();
-            ?>
-        </form>
-    </div>
-    <?php
-}
 
-// 4. Field callbacks
 function pdf2p2_api_key_field_cb() {
     $key = get_option( 'pdf2p2_api_key', '' );
-    // Always show empty; mask if exists
     printf(
-        '<input type="password" name="pdf2p2_api_key" value="" class="regular-text" />'
-        . ( $key ? '<p class="description">(An API key is already saved.)</p>' : '<p class="description">Enter your OCR service API key.</p>' ),
+        '<input type="password"
+                name="pdf2p2_api_key"
+                value=""
+                placeholder="%s"
+                class="regular-text" />',
+        esc_attr( $key ? '••••••••' : '' )
     );
+
+    if ( $key ) {
+        echo '<p class="description">An API key is already saved.</p>';
+    } else {
+        echo '<p class="description">Enter your OCR service API key.</p>';
+    }
 }
 
 function pdf2p2_import_rssfeed_url_field_cb() {
@@ -131,7 +121,7 @@ function pdf2p2_total_docs_field_cb() {
 }
 
 function pdf2p2_cron_schedule_field_cb() {
-    // Pull in all registered WP cron schedules
+
     $schedules = wp_get_schedules();
     $current  = get_option( 'pdf2p2_cron_schedule', 'daily' );
 
@@ -149,28 +139,47 @@ function pdf2p2_cron_schedule_field_cb() {
 }
 
 function pdf2p2_debug_mode_cb() {
-    // Read the saved debug‐mode flag (0 or 1)
     $enabled = (int) get_option( 'pdf2p2_debug_mode', 0 );
 
-    // Print a single checkbox
+
     printf(
         '<label for="pdf2p2_debug_mode">
             <input type="checkbox" id="pdf2p2_debug_mode" name="pdf2p2_debug_mode" value="1" %s />
             %s
         </label>
         <p class="description">%s</p>',
-        checked( 1, $enabled, false ),               // <-- now uses $enabled
-        esc_html__( 'Enable debug mode', 'pdf2p2' ), // label text
-        esc_html__( 'Toggle pdf2p2 debug logging on or off.', 'pdf2p2' ) // description
+        checked( 1, $enabled, false ),              
+        esc_html__( 'Enable debug mode', 'pdf2p2' ), 
+        esc_html__( 'Toggle pdf2p2 debug logging on or off.', 'pdf2p2' ) 
     );
 }
 
 
-// 5. Sanitization for API key (preserve existing if left blank)
 function pdf2p2_sanitize_api_key( $input ) {
     $old = get_option( 'pdf2p2_api_key', '' );
     if ( empty( $input ) && $old ) {
         return $old;
     }
     return sanitize_text_field( $input );
+}
+
+
+
+function pdf2p2_render_settings_page() {
+    ?>
+
+
+        <div class="wrap">
+        <h1>pdf2p2 Settings</h1>
+        <form method="post" action="options.php">
+            <?php
+            settings_fields( 'pdf2p2_settings_group' );
+            do_settings_sections( 'pdf2p2-settings' );
+            submit_button();
+            ?>
+        </form>
+    </div> 
+
+    
+    <?php
 }

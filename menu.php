@@ -7,8 +7,8 @@
 function pdf2p2_admin_menu() {
     // Top‐level page
     add_menu_page(
-        'pdf2p2',               // page title
-        'pdf2p2',               // menu title
+        'pdf2p&sup2;',               // page title
+        'pdf2p&sup2;',               // menu title
         'manage_options',       // capability
         'pdf2p2_home',          // menu slug
         'render_pdf2p2_home_page',
@@ -17,11 +17,13 @@ function pdf2p2_admin_menu() {
 
     // Sub‐menus
     $subs = [
-        ['slug' => 'pdf2p2_rss_feed',       'title' => 'pdf2p2 Feed',                'callback' => 'pdf2p2_render_rss_feed'],
-        ['slug' => 'pdf2p2_settings',       'title' => 'pdf2p2 Settings',            'callback' => 'pdf2p2_render_settings_page'],
-        ['slug' => 'pdf2p2_logs',           'title' => 'pdf2p2 Logs',                'callback' => 'pdf2p2_render_logs_page'],
-        ['slug' => 'pdf2p2_import',         'title' => 'pdf2p2 Import',              'callback' => 'pdf2p2_render_import_page'],
-        ['slug' => 'pdf2p2-md-convert',     'title' => 'pdf2p2 Process MD',          'callback' => 'pdf2p2_render_md_processor_page'], 
+        ['slug' => 'pdf2p2_rss_feed',       'title' => 'pdf2p&sup2; Feed',                'callback' => 'pdf2p2_render_rss_feed'],
+        ['slug' => 'pdf2p2_import',         'title' => 'pdf2p&sup2; Import',              'callback' => 'pdf2p2_render_import_page'],
+        ['slug' => 'pdf2p2-minstral',       'title' => 'pdf2p&sup2; Minstral',            'callback' => 'pdf2p2_render_minstral_page'],
+        ['slug' => 'pdf2p2-minstral-send',  'title' => 'pdf2p&sup2; Minstral Send',       'callback' => 'pdf2p2_render_minstral_send_page'],
+        ['slug' => 'pdf2p2-md-convert',     'title' => 'pdf2p&sup2; Process MD',          'callback' => 'pdf2p2_render_md_processor_page'], 
+        ['slug' => 'pdf2p2_settings',       'title' => 'pdf2p&sup2; Settings',            'callback' => 'pdf2p2_render_settings_page'],
+        ['slug' => 'pdf2p2_logs',           'title' => 'pdf2p&sup2; Logs',                'callback' => 'pdf2p2_render_logs_page'],
 
     ];
 

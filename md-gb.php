@@ -11,11 +11,17 @@ function pdf2p2_render_md_processor_page() {
 
     $staff_verified = get_posts([
         'post_type'   => 'pdf2p2_import',
+        'post_status'    => 'any',
         'posts_per_page' => -1,
         'tax_query'   => [[
             'taxonomy' => 'status',
             'field'    => 'slug',
             'terms'    => 'staff_verified',
+        ]],
+        'meta_query' => [[
+            'key'     => 'minstral_processed',
+            'value'   => '0',
+            'compare' => '!=',
         ]],
     ]);
 
@@ -65,7 +71,9 @@ function pdf2p2_move_post_to_gutenberg($post_id) {
         'post_content' => $blocks_content,
     ]);
 
-    wp_set_object_terms($post_id, 'human-verified', 'status', false);
+    wp_set_object_terms($post_id, 'human_verified', 'status', false);
+    wp_set_object_terms($post_id, 'staff_verified', 'status', false);
 }
 
 
+ 

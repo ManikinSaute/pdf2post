@@ -82,18 +82,19 @@ function pdf2p2_process_pdf_urls( array $urls, $force = false ) {
         $post_id = wp_insert_post( [
             'post_title'   => $file_name,
             'post_content' => $content,
-            'post_status'  => 'publish',
+            'post_status'  => 'draft',
             'post_type'    => 'pdf2p2_import',
         ] );
 
         if ( ! is_wp_error( $post_id ) ) {
-            wp_set_object_terms( $post_id, 'unprocessed', 'status', false );
+            wp_set_object_terms( $post_id, 'un_verified', 'status', true );
             update_post_meta( $post_id, 'pdf2p2_original_file_path', $pdf_url );
             update_post_meta( $post_id, 'pdf2p2_new_file_url',      $attach_url );
             update_post_meta( $post_id, 'pdf2p2_file_path',         $file_path );
             update_post_meta( $post_id, 'pdf2p2_attachment_id',     $attach_id );
             update_post_meta( $post_id, 'pdf2p2_file_hash',         $file_hash );
             update_post_meta( $post_id, 'pdf2p2_file_name',         $file_name );
+            update_post_meta( $post_id, 'minstral_processed',       '0' );
 
             echo '<div class="notice notice-success"><p>'
                . sprintf(

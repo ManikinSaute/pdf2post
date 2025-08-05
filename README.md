@@ -9,10 +9,10 @@ A tool for...
 - Grabbing a PDF file from a single file URL, or from a list of PDF file URLs.
 - Adding the PDF to the media libary, and creating a post with the file name, original URL and hash saved.
 - Automatically grabs all the unimported PDFs from the RSS feed with a Cron job.  
-- TO DO: Connecting to the Minstal OCR API and sending a PDF file with an API key.
-- TO DO: Recieveing mark down content back from the Minstral API, along with any images returned.
-- TO DO: Parsing the MD into the Guttenberg format.
-- TO DO: Setting the status of the post from, unprocessed, processed, human verified and staff verified.
+- Connecting to the Minstal OCR API and sending a PDF file with an API key.
+- Recieveing mark down content back from the Minstral API, along with any images returned.
+- Parsing the MD into the Guttenberg format.
+- TSetting the status of the post from, un verified, human verified and staff verified.
 - TO DO: Provide access to another WordPress site to collect the data.
 - TO DO: Remove old PDFs but keep the file hashes, dates and file names.
 - TO DO: create a page for converting a single PDF that is not online, and create a DRAFT.  
