@@ -39,7 +39,8 @@ jobs:
             pdf2p2.php \
             minstral.php \
             pdf2p2-templates.php \
-            settings.php
+            settings.php \ 
+            import_with_ocr.php
 
       - name: Commit ZIP file
         run: |
