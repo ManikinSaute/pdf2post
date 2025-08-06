@@ -21,7 +21,25 @@ jobs:
 
       - name: Create ZIP file
         run: |
-          zip pdf2p2.zip Parsedown.php cpt-terms.php cron.php default-content.php feed.php import.php logs.php md-example.txt md-gb.php menu.php pdf2p2-home.php pdf2p2.php settings.php
+          zip pdf2p2.zip \
+            Parsedown.php \
+            single-pdf2p2_gutenberg.php \
+            minstral-send.php \
+            single-pdf2p2_gutenberg.php \
+            cpt-terms.php \
+            cron.php \
+            default-content.php \
+            feed.php \
+            import.php \
+            logs.php \
+            md-example.txt \
+            md-gb.php \
+            menu.php \
+            pdf2p2-home.php \
+            pdf2p2.php \
+            minstral.php \
+            pdf2p2-templates.php \
+            settings.php
 
       - name: Commit ZIP file
         run: |
