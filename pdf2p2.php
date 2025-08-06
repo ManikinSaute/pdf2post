@@ -29,5 +29,12 @@ require_once __DIR__ . '/default-content.php';
 require_once __DIR__ . '/minstral.php';
 require_once __DIR__ . '/minstral-send.php';
 require_once __DIR__ . '/pdf2p2-templates.php';
+require_once __DIR__ . '/import_with_ocr.php';
 register_activation_hook( __FILE__, 'pdf2p2_activate' );
 
+add_action( 'init', function() {
+    if ( isset( $_GET['run_pdf2p2_cron'] ) ) {
+        do_action( 'pdf2p2_cron_process_unprocessed' );
+        wp_die( '📦 OCR cron manually triggered' );
+    }
+});

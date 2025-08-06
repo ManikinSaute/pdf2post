@@ -18,10 +18,11 @@ function pdf2p2_admin_menu() {
     // Sub‐menus
     $subs = [
         ['slug' => 'pdf2p2_rss_feed',       'title' => 'pdf2p&sup2; Feed',                'callback' => 'pdf2p2_render_rss_feed'],
+        ['slug' => 'pdf2p2_import_w_ocr',   'title' => 'pdf2p&sup2; Import w OCR',        'callback' => 'pdf2p2_render_import_ocr_page'],
+        ['slug' => 'pdf2p2_md-gb',          'title' => 'pdf2p&sup2; fmd gb',              'callback' => 'pdf2p2_render_md_gb_page'],
         ['slug' => 'pdf2p2_import',         'title' => 'pdf2p&sup2; Import',              'callback' => 'pdf2p2_render_import_page'],
         ['slug' => 'pdf2p2-minstral',       'title' => 'pdf2p&sup2; Minstral',            'callback' => 'pdf2p2_render_minstral_page'],
-        ['slug' => 'pdf2p2-minstral-send',  'title' => 'pdf2p&sup2; Minstral Send',       'callback' => 'pdf2p2_render_minstral_send_page'],
-        ['slug' => 'pdf2p2-md-convert',     'title' => 'pdf2p&sup2; Process MD',          'callback' => 'pdf2p2_render_md_processor_page'], 
+        ['slug' => 'pdf2p2-minstral-send',   'title' => 'pdf2p&sup2; Minstral Send',      'callback' => 'pdf2p2_render_minstral_send_page'], 
         ['slug' => 'pdf2p2_settings',       'title' => 'pdf2p&sup2; Settings',            'callback' => 'pdf2p2_render_settings_page'],
         ['slug' => 'pdf2p2_logs',           'title' => 'pdf2p&sup2; Logs',                'callback' => 'pdf2p2_render_logs_page'],
 
@@ -39,3 +40,4 @@ function pdf2p2_admin_menu() {
     }
 }
 add_action( 'admin_menu', 'pdf2p2_admin_menu' );
+

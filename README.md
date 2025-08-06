@@ -5,7 +5,7 @@ PDFs to Posts, there was already a PDF2Post plugin, so we decided to append our 
 ## What is it? 
 
 A tool for...
-- Parsing an RSS feed URL, for a list of PDF files.
+- Parsing an RSS feed URL, for a list of PDF files.   
 - Grabbing a PDF file from a single file URL, or from a list of PDF file URLs.
 - Adding the PDF to the media libary, and creating a post with the file name, original URL and hash saved.
 - Automatically grabs all the unimported PDFs from the RSS feed with a Cron job.  

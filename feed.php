@@ -3,7 +3,15 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-function pdf2p2_get_feed_not_imported( $feed_url = '' ) {
+
+/**
+ * Return an array of PDF URLs in the RSS/Atom feed
+ * that have not yet been imported.
+ *
+ * @param string $feed_url Optional override for the feed URL.
+ * @return string[] Array of not-yet-imported PDF URLs.
+ */
+function pdf2p2_get_not_imported_feed_urls( $feed_url = '' ) {
     if ( empty( $feed_url ) || ! filter_var( $feed_url, FILTER_VALIDATE_URL ) ) {
         $feed_url = 'https://www.amnesty.org/en/latest/feed/';
     }

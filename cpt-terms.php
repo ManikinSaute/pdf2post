@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function pdf2p2_register_cpts() {
     $cpts = [
         'pdf2p2_import'    => [ 'singular' => 'pdf2p2 Import',  'plural' => 'pdf2p2 Imports' ],
-        'pdf2p2_gutenberg' => [ 'singular' => 'pdf2p2 GB Post', 'plural' => 'pdf2p2 GB Posts' ],
+        'pdf2p2_gutenberg' => [ 'singular' => 'pdf2p2 Post', 'plural' => 'pdf2p2 Posts' ],
     ];
 
     foreach ( $cpts as $slug => $labels ) {
@@ -17,6 +17,7 @@ function pdf2p2_register_cpts() {
                 'singular_name' => $labels['singular'],
             ],
             'public'        => ( $slug === 'pdf2p2_gutenberg' ),
+            'show_in_menu'  => ( $slug === 'pdf2p2_gutenberg' ),
             'show_ui'       => true,
             'has_archive'   => false,
             'menu_position' => 20,
@@ -41,6 +42,9 @@ function pdf2p2_register_status_taxonomy() {
         'all_items'     => 'All Statuses',
         'add_new_item'  => 'Add New Status',
         'edit_item'     => 'Edit Status',
+        'capability_type'    => 'post',
+        'show_in_rest'       => true,
+        'supports'=> [ 'title', 'editor', 'revisions'],
     ];
 
     register_taxonomy( $tax, $cpts, [

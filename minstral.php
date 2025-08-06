@@ -3,6 +3,32 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }   
 
+
+/**
+ * Return an array of post IDs whose `minstral_processed` flag is still false/0.
+ *
+ * @param string[] $post_types Optional. Which post-types to include. Default: pdf2p2_import & pdf2p2_gutenberg.
+ * @return int[] Array of post IDs not yet processed by Mistral OCR.
+ */
+function pdf2p2_get_unprocessed_post_ids( array $post_types = [ 'pdf2p2_import', 'pdf2p2_gutenberg' ] ) : array {
+    $args = [
+        'post_type'      => $post_types,
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+        'meta_query'     => [
+            [
+                'key'   => 'minstral_processed',
+                'value' => '0',
+                'compare' => '=',
+            ],
+        ],
+    ];
+
+    return array_map( 'intval', get_posts( $args ) );
+}
+
+
+
 add_action('rest_api_init', function () {
     register_rest_route('pdf2p2/v1', '/check-files', [
         'methods'  => 'POST',
@@ -13,136 +39,22 @@ add_action('rest_api_init', function () {
     ]);
 });
 
-function pdf2p2_check_files($request) {
-    $post_ids = $request->get_param('post_ids');
-    if (!is_array($post_ids) || empty($post_ids)) {
-        return new WP_Error('invalid_post_ids', 'No post IDs provided.', ['status' => 400]);
-    }
-
-    $processed = [];
-    $not_processed = [];
-
-    foreach ($post_ids as $post_id) {
-        $post = get_post($post_id);
-        if (!$post) continue;
-
-        // Get file name and hash from post meta (adjust meta keys as needed)
-        $file_name = get_post_meta($post_id, 'pdf2p2_file_name', true);
-        $file_hash = get_post_meta($post_id, 'pdf2p2_file_hash', true);
-
-        if (!$file_name && !$file_hash) {
-            $not_processed[] = [
-                'post_id'   => $post_id,
-                'file_name' => '',
-                'file_hash' => '',
-                'reason'    => 'No file name or hash found.'
-            ];
-            continue;
-        }
-
-        // Query for existing processed posts in both post types
-        $args = [
-            'post_type'      => ['pdf2p2_imports', 'pdf2p2_gutenberg'],
-            'post_status'    => 'any',
-            'posts_per_page' => 1,
-            'meta_query'     => [
-                'relation' => 'OR',
-                [
-                    'key'   => 'pdf2p2_file_name',
-                    'value' => $file_name,
-                    'compare' => '='
-                ],
-                [
-                    'key'   => 'pdf2p2_file_hash',
-                    'value' => $file_hash,
-                    'compare' => '='
-                ]
-            ]
-        ];
-        $query = new WP_Query($args);
-
-        $already_processed = false;
-        if ($query->have_posts()) {
-            foreach ($query->posts as $matched_post) {
-                $processed_flag = get_post_meta($matched_post->ID, 'minstral_processed', true);
-                if ($processed_flag === '1') {
-                    $already_processed = true;
-                    break;
-                }
-            }
-        }
-
-        if ($already_processed) {
-            $processed[] = [
-                'post_id'   => $post_id,
-                'file_name' => $file_name,
-                'file_hash' => $file_hash
-            ];
-        } else {
-            $not_processed[] = [
-                'post_id'   => $post_id,
-                'file_name' => $file_name,
-                'file_hash' => $file_hash
-            ];
-        }
-    }
-
-    return [
-        'processed'     => $processed,
-        'not_processed' => $not_processed
-    ];
-}
-
-
 
 function pdf2p2_render_minstral_page() {
     echo '<div class="wrap">';
     echo '<h1>pdf2p&sup2; Minstral Processor</h1>';
     echo '<p>This tell us what has or has not been processed by the OCR tool.</p>';
 
- $query = new WP_Query([
-  'post_type'      => ['pdf2p2_import','pdf2p2_gutenberg'],
-  'posts_per_page' => -1,
-  'meta_key'       => 'minstral_processed',    
-  'orderby'        => 'meta_value_num title',  
-  'order'          => 'ASC',
-]);
+    $unprocessed = pdf2p2_get_unprocessed_post_ids();
+    if ( ! empty( $unprocessed ) ) {
+        echo '<p>Unprocessed file/s</p>';
+        foreach ( $unprocessed as $post_id ) {
+            echo '<li>' . esc_html( get_the_title( $post_id ) ) . ' (ID: ' . esc_html( $post_id ) . ')</li>';
+        }
+        echo '</ul>';
 
-if ( $query->have_posts() ) {
-    $all_posts = $query->posts;
-    wp_reset_postdata();
-    echo '<h2>Processed Documents</h2>';
-    echo '<ul>';
-    foreach ( $all_posts as $post ) {
-        $status = intval( get_post_meta( $post->ID, 'minstral_processed', true ) );
-        if ( $status === 1 ) {
-            printf(
-                '<li><a href="%s">%s</a> (ID: %d, Type: %s)</li>',
-                esc_url( get_edit_post_link( $post->ID ) ),
-                esc_html( get_the_title( $post ) ),
-                $post->ID,
-                esc_html( get_post_type( $post ) )
-            );
-        }
-    }
-    echo '</ul>';
-    echo '<h2>Unprocessed Documents</h2>';
-    echo '<ul>';
-    foreach ( $all_posts as $post ) {
-        $status = intval( get_post_meta( $post->ID, 'minstral_processed', true ) );
-        if ( $status === 0 ) {
-            printf(
-                '<li><a href="%s">%s</a> (ID: %d, Type: %s)</li>',
-                esc_url( get_edit_post_link( $post->ID ) ),
-                esc_html( get_the_title( $post ) ),
-                $post->ID,
-                esc_html( get_post_type( $post ) )
-            );
-        }
-    }
-    echo '</ul>';
 } else {
-    echo '<p>No documents found.</p>';
+    echo '<p>No unprocessed files</p>';
 }
 
 

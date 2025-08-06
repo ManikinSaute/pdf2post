@@ -82,7 +82,7 @@ function pdf2p2_process_pdf_urls( array $urls, $force = false ) {
         $post_id = wp_insert_post( [
             'post_title'   => $file_name,
             'post_content' => $content,
-            'post_status'  => 'draft',
+            'post_status'  => 'published',
             'post_type'    => 'pdf2p2_import',
         ] );
 
@@ -123,6 +123,14 @@ function pdf2p2_render_import_page() {
     <div class="wrap">
       <h1>Import PDF(s)</h1>
       <p>Enter one or more PDF URLs (one per line) to sideload into the Media Library, compute each SHA-256 hash, and then create an “Import” post for each.</p>
+      <p>not yet imported</p>
+            <?
+        $feed_url     = get_option( 'pdf2p2_import_rssfeed_url' );
+        $not_imported = pdf2p2_get_not_imported_feed_urls( $feed_url );
+        foreach ( $not_imported as $pdf_url ) {
+            echo esc_html( $pdf_url ) . '<br>';
+            } ?>
+      
       <form method="post">
         <?php wp_nonce_field( 'pdf2p2_upload', 'pdf2p2_nonce' ); ?>
 
