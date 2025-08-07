@@ -5,17 +5,18 @@ PDFs to Posts, there was already a PDF2Post plugin, so we decided to append our 
 ## What is it? 
 
 A tool for...
-- Parsing an RSS feed URL, for a list of PDF files.   
-- Grabbing a PDF file from a single file URL, or from a list of PDF file URLs.
-- Adding the PDF to the media libary, and creating a post with the file name, original URL and hash saved.
-- Automatically grabs all the unimported PDFs from the RSS feed with a Cron job.  
-- Connecting to the Minstal OCR API and sending a PDF file with an API key.
-- Recieveing mark down content back from the Minstral API, along with any images returned.
-- Parsing the MD into the Guttenberg format.
-- TSetting the status of the post from, un verified, human verified and staff verified.
+- Parsing a RSS feed URL to extrack a list of PDF files.   
+- Grabbing the PDFs and saving them to the media libary.
+- Creating a post with the file name, original URL, attachment and hash saved.
+- Sending the original PDF file URL to the Minstal OCR tool.
+- Populating the post content with the results from the OCR tool.
+- Converting the MD to HTML and then Gutenberg.
+- A single post can be viewed, with meta data saved on the right hand side of the single post.
+- A single post can be accessed as JSON 
 - TO DO: Provide access to another WordPress site to collect the data.
 - TO DO: Remove old PDFs but keep the file hashes, dates and file names.
-- TO DO: create a page for converting a single PDF that is not online, and create a DRAFT.  
+- TO DO: Show an index page with all avalibe processes & staff verified pages.
+- TO DO: Show an index page with all avalibe processes & un verified pages.
 
 ## Demo & Test
 
